@@ -71,6 +71,14 @@ export const DEFAULT_PEERS = [
   '/ip4/51.83.134.116/udp/51003/quic-v1/p2p/12D3KooWBsDmW1YcmcxxLrpaWViGWLshfwtwvD9U3xicWnjSDbak',
 ];
 
+// The Logos cryptarchia testnet GENESIS id — the chain-start timestamp that namespaces the chain.
+// `logos-blockchain-node init` stamps a FRESH genesis (the node's own start time), which produces
+// a standalone one-node chain that CANNOT join the testnet (its peers' blocks are ParentMissing).
+// The container aligns the generated config's `prefix` to this so a brand-new node joins + syncs
+// the REAL chain from height 0 (verified). Override per-deployment via $GENESIS_PREFIX; set it
+// empty to run a standalone net. This belongs to the Logos testnet deployment, not Diaphani.
+export const DEFAULT_GENESIS_PREFIX = '1779735780';
+
 export function ensureDir() {
   fs.mkdirSync(DIR, { recursive: true, mode: 0o700 });
 }

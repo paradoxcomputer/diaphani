@@ -17,6 +17,12 @@ BOOTSTRAP_DNS=${BOOTSTRAP_DNS:-1.1.1.1}    # nym custom DNS — resolves via DoH
 # Logos bootstrap peer multiaddrs (space-separated). MUST listen on a nym-allowed udp
 # port (50000-65535) so the node reaches them straight through the tunnel (no relay in between).
 BOOTSTRAP_PEERS=${BOOTSTRAP_PEERS:-}
+# Testnet GENESIS id (the chain-start timestamp). `logos-blockchain-node init` stamps a FRESH
+# genesis (its own start time) -> a standalone one-node chain that CANNOT join the testnet (its
+# blocks would be ParentMissing forever). Setting this aligns the generated config `prefix` to
+# the testnet's so the node joins + syncs the REAL chain. Empty = keep init's fresh genesis
+# (a private / standalone net).
+GENESIS_PREFIX=${GENESIS_PREFIX:-}
 SECRETS=${SECRETS:-/diaphani/secrets}
 DATA=${DATA:-/diaphani/data}
 ONION_DIR=${ONION_DIR:-/diaphani/onion}
@@ -316,6 +322,18 @@ if [ ! -f "$CONF" ]; then
     --external-address "/ip4/203.0.113.1/udp/$SWARM_PORT/quic-v1" -o "$CONF" \
     || FATAL "node init failed"
   sed -i 's#server: pool.ntp.org:123#server: 162.159.200.123:123#' "$CONF" 2>/dev/null || true
+  # Join the testnet GENESIS. `init` stamped a FRESH genesis (its own start time) -> a standalone
+  # one-node chain whose blocks the testnet peers can't parent. Align the config `prefix` to the
+  # testnet's chain-start id so the node syncs the REAL chain. Empty GENESIS_PREFIX keeps the
+  # fresh init genesis (a standalone net). VERIFIED: a fresh node with only the prefix aligned
+  # joins + syncs from height 0.
+  if [ -n "$GENESIS_PREFIX" ]; then
+    sed -i "s/prefix: '[0-9]*'/prefix: '$GENESIS_PREFIX'/" "$CONF" 2>/dev/null || true
+    grep -q "prefix: '$GENESIS_PREFIX'" "$CONF" || FATAL "could not set genesis prefix $GENESIS_PREFIX in $CONF"
+    LOG "joined testnet genesis (prefix $GENESIS_PREFIX)"
+  else
+    LOG "WARNING: no GENESIS_PREFIX set — node will run a STANDALONE fresh genesis, NOT joining any testnet"
+  fi
   LOG "generated node config at $CONF (NAT traversal/UPnP/AutoNAT disabled — dial-out-only)"
 else
   # An existing config (persisted in the dia-data volume) is reused as-is — so a

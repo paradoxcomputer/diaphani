@@ -2,7 +2,7 @@ import { ui } from '../ui.js';
 import { sleep } from '../run.js';
 import * as vault from '../vault.js';
 import * as docker from '../docker.js';
-import { load, STRATEGIES, nymModeFor, graduateModeFor, DEFAULT_PEERS } from '../config.js';
+import { load, STRATEGIES, nymModeFor, graduateModeFor, DEFAULT_PEERS, DEFAULT_GENESIS_PREFIX } from '../config.js';
 
 // Logos bootstrap peers — from $BOOTSTRAP_PEERS (override) or the saved config, falling back to
 // the built-in DEFAULT_PEERS. They MUST listen on a nym-allowed udp port (50000-65535) so the
@@ -107,6 +107,8 @@ export async function up(opts = {}) {
           ENABLE_ONION: cfg.onion ? '1' : '0',
           API_PORT: String(cfg.apiPort || 8080),
           SWARM_PORT: String(cfg.swarmPort || 3000),
+          // Join the testnet's genesis (else `init` mints a fresh standalone chain that can't sync).
+          GENESIS_PREFIX: process.env.GENESIS_PREFIX || cfg.genesisPrefix || DEFAULT_GENESIS_PREFIX,
         },
       });
       return docker.CONTAINER;

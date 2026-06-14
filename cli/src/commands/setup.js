@@ -4,7 +4,7 @@ import { isRoot } from '../privilege.js';
 import { which } from '../system.js';
 import * as vault from '../vault.js';
 import * as docker from '../docker.js';
-import { save, purgeLegacyPlaintext, STRATEGIES, DEFAULT_PEERS } from '../config.js';
+import { save, purgeLegacyPlaintext, STRATEGIES, DEFAULT_PEERS, DEFAULT_GENESIS_PREFIX } from '../config.js';
 
 export async function setup() {
   ui.banner();
@@ -65,6 +65,7 @@ export async function setup() {
   // ── 6. Save ─────────────────────────────────────────────────────────────
   const cfg = {
     version: 1, strategy, peers, swarmPort, apiPort, onion,
+    genesisPrefix: DEFAULT_GENESIS_PREFIX,   // the testnet chain-start id the node joins
     createdAt: new Date().toISOString(),
   };
   save(cfg);

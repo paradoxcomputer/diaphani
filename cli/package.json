@@ -1,6 +1,6 @@
 {
   "name": "@paradoxcomputer/diaphani",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Run a Logos testnet node that links you to no one — Tor onion API + a Nym egress, set up with one friendly command.",
   "type": "module",
   "bin": {
