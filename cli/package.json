@@ -1,0 +1,53 @@
+{
+  "name": "@paradoxcomputer/diaphani",
+  "version": "0.1.0",
+  "description": "Run a Logos testnet node that links you to no one — Tor onion API + a Nym egress, set up with one friendly command.",
+  "type": "module",
+  "bin": {
+    "diaphani": "bin/diaphani.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "scripts",
+    "docker",
+    "LICENSE-APACHE",
+    "LICENSE-MIT"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node bin/diaphani.js",
+    "test": "node tools/smoke.mjs",
+    "prepack": "node tools/bundle.mjs",
+    "postpack": "node tools/clean.mjs"
+  },
+  "keywords": [
+    "logos",
+    "nym",
+    "tor",
+    "privacy",
+    "anonymity",
+    "blockchain",
+    "node"
+  ],
+  "license": "Apache-2.0 OR MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paradoxcomputer/diaphani.git",
+    "directory": "cli"
+  },
+  "homepage": "https://github.com/paradoxcomputer/diaphani#readme",
+  "bugs": "https://github.com/paradoxcomputer/diaphani/issues",
+  "dependencies": {
+    "@inquirer/prompts": "^7.2.0",
+    "boxen": "^8.0.1",
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "ora": "^8.1.0"
+  }
+}

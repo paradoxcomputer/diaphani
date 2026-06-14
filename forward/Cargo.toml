@@ -1,0 +1,18 @@
+[package]
+name = "diaphani-forward"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Local TCP forwarder: maps 127.0.0.1:PORT to a Diaphani .onion over Tor, so an unmodified service reaches the hidden L1 node with no code change."
+
+[[bin]]
+name = "diaphani-forward"
+path = "src/main.rs"
+
+[dependencies]
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "net", "io-util", "time"] }
+tokio-socks = "0.5"
+clap = { version = "4", features = ["derive", "env"] }
+anyhow = "1"

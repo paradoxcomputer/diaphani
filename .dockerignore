@@ -1,0 +1,9 @@
+# Docker build context hardening. The build CONTEXT is the repo root (the parent of
+# docker/), but the Dockerfile only needs `docker/entrypoint.sh`. Without this file
+# `docker build` would tar the WHOLE root — including the plaintext Nym mnemonic
+# (nym.txt), the encrypted vault, the onion keys, turn.env, and .git — and upload it
+# to the root-owned daemon (readable by the docker group, may linger in build temp).
+#
+# So: deny everything, then re-include ONLY the entrypoint the Dockerfile COPYs.
+*
+!docker/entrypoint.sh

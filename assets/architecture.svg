@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="520" viewBox="0 0 1080 520" font-family="'Segoe UI', system-ui, -apple-system, Roboto, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#555"/>
+    </marker>
+    <marker id="ap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7c5cff"/>
+    </marker>
+    <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#e8943a"/>
+    </marker>
+    <style>
+      .t   { font-size:13px; fill:#1a1a2e; }
+      .b   { font-size:13px; fill:#1a1a2e; font-weight:700; }
+      .s   { font-size:11px; fill:#1a1a2e; }
+      .l   { font-size:10.5px; fill:#5a5a6a; }
+      .m   { font-family:'SF Mono','Consolas','Liberation Mono',monospace; font-size:10.5px; }
+      .sees{ font-size:11px; }
+    </style>
+  </defs>
+
+  <rect width="1080" height="520" fill="#ffffff"/>
+
+  <!-- you / sequencer -->
+  <rect x="28" y="200" width="162" height="86" rx="10" fill="#f2f2f7" stroke="#9a9aa8"/>
+  <text x="109" y="232" text-anchor="middle" class="b">you / sequencer</text>
+  <text x="109" y="251" text-anchor="middle" class="l">any machine</text>
+  <text x="109" y="266" text-anchor="middle" class="l">over Tor (SOCKS)</text>
+
+  <!-- .onion link into the container's Tor -->
+  <path d="M190,224 C 250,224 270,150 398,140" fill="none" stroke="#7c5cff" stroke-width="1.8" marker-end="url(#ap)"/>
+  <text x="232" y="172" class="l" fill="#7c5cff">.onion (Tor v3)</text>
+  <text x="232" y="183" class="l" fill="#7c5cff">read + write L1</text>
+
+  <!-- ONE PRIVILEGED CONTAINER -->
+  <rect x="320" y="56" width="440" height="408" rx="14" fill="#fbfaff" stroke="#7c5cff" stroke-width="2.2"/>
+  <text x="340" y="82" class="b" fill="#7c5cff" letter-spacing="0.5">ONE PRIVILEGED CONTAINER</text>
+  <text x="340" y="100" class="l" fill="#6a4fb0">it IS the network namespace · Nym's nftables kill-switch = FAIL-CLOSED</text>
+
+  <!-- Tor -->
+  <rect x="398" y="116" width="184" height="58" rx="8" fill="#ffffff" stroke="#555"/>
+  <text x="490" y="141" text-anchor="middle" class="b">Tor</text>
+  <text x="490" y="159" text-anchor="middle" class="l">v3 hidden service</text>
+
+  <!-- Logos node -->
+  <rect x="346" y="238" width="178" height="100" rx="8" fill="#ffffff" stroke="#444"/>
+  <text x="435" y="262" text-anchor="middle" class="b">Logos node</text>
+  <text x="435" y="281" text-anchor="middle" class="s">libp2p QUIC · dial-out-only</text>
+  <text x="435" y="299" text-anchor="middle" class="s">syncs + accepts your tx</text>
+  <text x="435" y="322" text-anchor="middle" class="m" fill="#3b5bbf">API 127.0.0.1</text>
+
+  <!-- nym -->
+  <rect x="556" y="238" width="178" height="100" rx="8" fill="#fff3e0" stroke="#e8943a"/>
+  <text x="645" y="266" text-anchor="middle" class="b">nym-vpnd</text>
+  <text x="645" y="285" text-anchor="middle" class="s">2-hop WireGuard</text>
+  <text x="645" y="303" text-anchor="middle" class="s">· or 5-hop mixnet</text>
+
+  <!-- Tor -> node API (loopback) -->
+  <path d="M460,174 C 445,200 438,214 436,236" fill="none" stroke="#3b5bbf" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#a)"/>
+  <text x="468" y="210" class="m" fill="#3b5bbf">loopback</text>
+
+  <!-- node -> nym -->
+  <path d="M524,288 L554,288" fill="none" stroke="#555" stroke-width="1.8" marker-end="url(#a)"/>
+
+  <!-- kill-switch note -->
+  <rect x="346" y="358" width="388" height="74" rx="8" fill="#ffffff" stroke="#d9cffb"/>
+  <text x="540" y="378" text-anchor="middle" class="l">Nym's kill-switch opens ONLY the nym tunnel + tor's egress (by uid).</text>
+  <text x="540" y="393" text-anchor="middle" class="l">The node has NO clearnet exception and its QUIC can leave only via the tunnel.</text>
+  <text x="540" y="408" text-anchor="middle" class="l" font-weight="700">If Nym drops, node traffic is dropped and never leaked to the clearnet.</text>
+  <text x="540" y="424" text-anchor="middle" class="m" fill="#6a4fb0">node QUIC → nym tunnel → peers</text>
+
+  <!-- egress out of the container to the Nym tunnel -->
+  <path d="M734,280 C 780,280 790,200 826,190" fill="none" stroke="#e8943a" stroke-width="2" marker-end="url(#ag)"/>
+  <text x="752" y="248" class="l" fill="#b06a16">only nym's encrypted</text>
+  <text x="752" y="262" class="l" fill="#b06a16">WG underlay leaves the host</text>
+
+  <!-- Nym tunnel -->
+  <rect x="826" y="162" width="224" height="58" rx="8" fill="#f2f2f7" stroke="#888"/>
+  <text x="938" y="186" text-anchor="middle" class="b">Nym tunnel</text>
+  <text x="938" y="204" text-anchor="middle" class="l">entry → exit · split across gateways</text>
+
+  <!-- Nym -> peers -->
+  <path d="M938,220 L938,300" fill="none" stroke="#7c5cff" stroke-width="2" marker-end="url(#ap)"/>
+  <text x="948" y="266" class="l">nym exit forwards your QUIC</text>
+
+  <!-- peers -->
+  <rect x="826" y="300" width="224" height="58" rx="8" fill="#eef9f0" stroke="#57a06a"/>
+  <text x="938" y="324" text-anchor="middle" class="b">Logos testnet peers</text>
+  <text x="938" y="342" text-anchor="middle" class="l">on udp/50000–65535 (QUIC)</text>
+  <text x="938" y="382" text-anchor="middle" class="sees" fill="#2f8f4e" font-weight="700">peers see the Nym exit IP, never yours</text>
+
+  <!-- bottom legend -->
+  <text x="28" y="500" class="l"><tspan font-weight="700">Inbound</tspan> (the API):  you / sequencer → .onion → Tor → 127.0.0.1 node API      ·      <tspan font-weight="700">Egress</tspan> (P2P):  node → Nym (2-hop / 5-hop) → peers</text>
+</svg>

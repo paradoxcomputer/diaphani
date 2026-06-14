@@ -1,0 +1,16 @@
+# Rust workspace for Diaphani's client-side crates (the node-side tooling is the
+# Node CLI in cli/ and the Go shim in shim/, which are not Rust and not members).
+[workspace]
+resolver = "2"
+members = ["client", "explorer", "forward"]
+
+# Shared package metadata, inherited by every crate so version/license/repository
+# can't drift. NOTE: confirm `repository`/`homepage` org+name before the first
+# public push — see RELEASING.md ("Before you push").
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0 OR MIT"
+authors = ["Paradox Computer"]
+repository = "https://github.com/paradoxcomputer/diaphani"
+homepage = "https://github.com/paradoxcomputer/diaphani"

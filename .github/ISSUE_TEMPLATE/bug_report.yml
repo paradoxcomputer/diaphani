@@ -1,0 +1,45 @@
+name: Bug report
+description: Report a problem (NOT a security/deanonymization issue — use Security → Report a vulnerability for those)
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ⚠️ **Do not report security or deanonymization bugs here.** Use the repository's
+        **Security → Report a vulnerability** private channel instead (a public issue is a disclosure).
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead? Include the exact `diaphani` command and the relevant log lines (redact any secrets/.onion/IPs).
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version / commit
+      description: Output of `diaphani --version`, or the commit you built.
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: OS + glibc
+      description: e.g. `Ubuntu 24.04, glibc 2.39` (run `getconf GNU_LIBC_VERSION`).
+    validations:
+      required: true
+  - type: dropdown
+    id: phase
+    attributes:
+      label: Where did it fail?
+      options:
+        - setup / install (Docker)
+        - up — image build
+        - up — container start / nym connect
+        - up — routing / kill-switch
+        - node sync / peers
+        - onion / client
+        - status / down
+        - other
+    validations:
+      required: true

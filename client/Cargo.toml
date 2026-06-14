@@ -1,0 +1,46 @@
+[package]
+name = "diaphani-client"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description ="Plug-in Rust SDK for a sequencer to read + write Logos (cryptarchia) L1 over a Diaphani-fronted node's Tor .onion. Submitting a signed tx is a default capability; the node's own-wallet transfer is gated behind `node-wallet`."
+keywords = ["logos", "tor", "onion", "sequencer", "l1"]
+categories = ["network-programming", "api-bindings"]
+
+[features]
+default = []
+# Opt-in to the node's OWN-WALLET endpoint (`/wallet/.../transfer-funds`), where the
+# NODE signs and broadcasts with its wallet key. Off by default: it is only meaningful
+# if you operate the node and trust it to move funds. Submitting an already-signed
+# transaction (`submit_tx`) is the normal sequencer write and needs NO feature.
+node-wallet = []
+
+[dependencies]
+# `socks` pulls tokio-socks for SOCKS5h (the proxy resolves the .onion). We swap the
+# default native-tls (system OpenSSL) for rustls-tls (pure Rust) so a fresh user builds
+# without libssl-dev headers — but we KEEP a TLS backend, because `default-features=false`
+# with no TLS silently breaks the SOCKS connector at runtime ("scheme is not http"; it
+# compiles, then bypasses the proxy). That regression is guarded by tests/socks_proxy.rs,
+# which proves a request actually transits a SOCKS5 proxy. `stream` powers the bounded
+# (size-capped) body reads. Do not drop rustls-tls without that test passing.
+reqwest = { version = "0.12", default-features = false, features = ["json", "socks", "rustls-tls", "stream"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "1"
+futures-util = "0.3"            # StreamExt — bounded body reads (DoS guard)
+bytes = "1"                     # the assembled, capped body
+tokio = { version = "1", features = ["time"] }   # retry backoff + wait_until_online polling
+
+[dev-dependencies]
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "net", "io-util", "time"] }
+
+# `cargo run -p diaphani-client --example submit -- <onion> <tx.json>` — submit_tx is a
+# default capability (no feature needed) since broadcasting a signed tx is the core write.
+[[example]]
+name = "submit"
+
+# A worked sequencer integration: connect from env, wait for sync, submit + read L1.
+[[example]]
+name = "sequencer"
