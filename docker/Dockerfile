@@ -21,7 +21,7 @@
 # would defeat the masking + exfiltrate the secret. Bump this digest DELIBERATELY (resolve
 # with `docker buildx imagetools inspect ubuntu:24.04`); dependabot's docker ecosystem keeps
 # it current. The artifacts below are likewise sha256-pinned + `sha256sum -c`'d.
-FROM ubuntu:24.04@sha256:786a8b558f7be160c6c8c4a54f9a57274f3b4fb1491cf65146521ae77ff1dc54
+FROM ubuntu:26.04@sha256:f3d28607ddd78734bb7f71f117f3c6706c666b8b76cbff7c9ff6e5718d46ff64
 
 ARG NYM_VER=1.30.0
 ARG NODE_VER=0.1.2
