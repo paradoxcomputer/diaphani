@@ -44,7 +44,7 @@
   "homepage": "https://github.com/paradoxcomputer/diaphani#readme",
   "bugs": "https://github.com/paradoxcomputer/diaphani/issues",
   "dependencies": {
-    "@inquirer/prompts": "^7.2.0",
+    "@inquirer/prompts": "^8.5.2",
     "boxen": "^8.0.1",
     "chalk": "^5.3.0",
     "commander": "^12.1.0",
