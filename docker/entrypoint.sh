@@ -390,11 +390,26 @@ fi
 # ── 4) graduate (fast → 5-hop): once the node is synced, re-handshake nym on the mixnet ─
 need_graduate=0
 { [ -n "$GRADUATE" ] && [ "$GRADUATE" != "$NYM_MODE" ]; } && need_graduate=1
-[ "$need_graduate" = 1 ] && LOG "will graduate to the 5-hop mixnet once the node is synced (mode: Online)"
+[ "$need_graduate" = 1 ] && LOG "will graduate to the 5-hop mixnet once the node is genuinely synced (Online + peers + real height)"
 
 node_mode() {   # the node's reported sync mode (Online / Bootstrapping / …), or empty
   curl -s --max-time 5 "http://127.0.0.1:$API_PORT/cryptarchia/info" 2>/dev/null \
     | grep -oE '"mode" *: *"[^"]+"' | head -1 | grep -oE '"[^"]+"$' | tr -d '"'
+}
+# Whether the node is GENUINELY caught up to the network tip — the gate for graduating to the
+# 5-hop mixnet. mode alone is NOT enough: a node with ZERO peers and an empty DB still reports
+# "Online" (nothing tells it there are higher blocks), so graduating on mode would switch a
+# still-empty node onto the high-latency mixnet, where its 5s QUIC peer handshakes can never
+# complete — trapping it at height 0 with no peers. Require Online AND >=1 connected peer AND a
+# past-genesis height, so only a node actually following a real chain graduates.
+node_synced() {
+  [ "$(node_mode)" = "Online" ] || return 1
+  local h p
+  h=$(curl -s --max-time 5 "http://127.0.0.1:$API_PORT/cryptarchia/info" 2>/dev/null \
+    | grep -oE '"height" *: *[0-9]+' | grep -oE '[0-9]+$')
+  p=$(curl -s --max-time 5 "http://127.0.0.1:$API_PORT/network/info" 2>/dev/null \
+    | grep -oE '"n_peers" *: *[0-9]+' | grep -oE '[0-9]+$')
+  [ "${p:-0}" -ge 1 ] && [ "${h:-0}" -gt 0 ]
 }
 # Kill the node and CONFIRM it is provably gone before any nym re-handshake: SIGTERM, wait,
 # SIGKILL, wait, then prove no pid remains. Returns 0 only when the node is confirmed dead;
@@ -482,9 +497,10 @@ while true; do
   ip route replace default dev "$NYM_IF" table "$NYM_TABLE" 2>/dev/null || true
   [ "$ENABLE_ONION" = "1" ] && open_tor 2>/dev/null
   pgrep -f logos-blockchain-node >/dev/null || { LOG "node died — restarting"; start_node; }
-  # one-shot graduation: when the node first reaches Online, switch to the 5-hop mixnet. If
-  # it fails, graduate() recovers on Fast Mode and we don't re-flap.
-  if [ "$need_graduate" = 1 ] && [ "$(node_mode)" = "Online" ]; then
+  # one-shot graduation: when the node is GENUINELY synced (Online + peers + a real height — not
+  # the false "Online" a peerless empty node reports), switch to the 5-hop mixnet. If it fails,
+  # graduate() recovers on Fast Mode and we don't re-flap.
+  if [ "$need_graduate" = 1 ] && node_synced; then
     graduate
     need_graduate=0
   fi
