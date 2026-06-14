@@ -31,4 +31,12 @@ for (const lic of ['LICENSE-APACHE', 'LICENSE-MIT']) {
   if (fs.existsSync(src)) fs.copyFileSync(src, path.join(pkg, lic));
 }
 
-console.log('bundled scripts/, docker/, and LICENSE files into the package');
+// The canonical README lives at the repo root; the package root is cli/, which has
+// no README of its own. Copy it in so npm auto-includes it and the npmjs.com page
+// is not bare (npm rewrites its relative links against the `repository` field).
+{
+  const src = path.join(repo, 'README.md');
+  if (fs.existsSync(src)) fs.copyFileSync(src, path.join(pkg, 'README.md'));
+}
+
+console.log('bundled scripts/, docker/, LICENSE, and README into the package');
