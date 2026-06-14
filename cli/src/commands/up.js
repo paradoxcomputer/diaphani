@@ -15,7 +15,7 @@ function resolvePeers(cfg) {
     throw new Error(
       'No bootstrap peers set. The node needs at least one Logos testnet peer on a\n' +
       '  nym-allowed udp port (50000-65535). Set it in `diaphani setup`, or pass it:\n' +
-      '    BOOTSTRAP_PEERS="/ip4/<ip>/udp/54003/quic-v1/p2p/<peerid>" diaphani up',
+      '    BOOTSTRAP_PEERS="/ip4/<ip>/udp/51003/quic-v1/p2p/<peerid>" diaphani up',
     );
   }
   // Reject a /dns* (hostname) peer FIRST, with its own message: it would pass the

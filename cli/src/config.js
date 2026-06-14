@@ -68,7 +68,7 @@ export function graduateModeFor(strategy) {
 // the trailing /p2p/<id> before `init -p` (0.1.2 wants initial_peers without it). Override any
 // time with `diaphani setup` or BOOTSTRAP_PEERS="…".
 export const DEFAULT_PEERS = [
-  '/ip4/51.83.134.116/udp/54003/quic-v1/p2p/12D3KooWBsDmW1YcmcxxLrpaWViGWLshfwtwvD9U3xicWnjSDbak',
+  '/ip4/51.83.134.116/udp/51003/quic-v1/p2p/12D3KooWBsDmW1YcmcxxLrpaWViGWLshfwtwvD9U3xicWnjSDbak',
 ];
 
 export function ensureDir() {
