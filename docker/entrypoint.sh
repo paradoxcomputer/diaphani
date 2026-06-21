@@ -322,6 +322,14 @@ if [ ! -f "$CONF" ]; then
     --external-address "/ip4/203.0.113.1/udp/$SWARM_PORT/quic-v1" -o "$CONF" \
     || FATAL "node init failed"
   sed -i 's#server: pool.ntp.org:123#server: 162.159.200.123:123#' "$CONF" 2>/dev/null || true
+  # FAIL-LOUD (mirrors the GENESIS_PREFIX check below). The rewrite is what gives the node ZERO
+  # hostnames to resolve (see the SOURCE note at the top): the NTP target must be a literal IP, or
+  # the node's libc resolver issues an A/AAAA lookup of pool.ntp.org via Docker's 127.0.0.11 — which
+  # forwards from the HOST netns, OUTSIDE nym's tun/kill-switch/blackhole, leaking the real IP to a
+  # network observer. A future config-format drift could make the sed silently no-op; refuse to
+  # start unless the literal IP is in AND the hostname is out, rather than fail open.
+  { grep -q 'server: 162.159.200.123:123' "$CONF" && ! grep -q 'pool.ntp.org' "$CONF"; } \
+    || FATAL "NTP rewrite did not land in $CONF — node would resolve a hostname (real-IP DNS leak outside nym)"
   # Join the testnet GENESIS. `init` stamped a FRESH genesis (its own start time) -> a standalone
   # one-node chain whose blocks the testnet peers can't parent. Align the config `prefix` to the
   # testnet's chain-start id so the node syncs the REAL chain. Empty GENESIS_PREFIX keeps the
